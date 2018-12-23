@@ -14,7 +14,8 @@ struct Colors {
     static var white = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     static var black = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     static var pink = #colorLiteral(red: 0.9666872621, green: 0.3734043837, blue: 0.3709292412, alpha: 1)
-    static var green =  #colorLiteral(red: 0.01955322362, green: 0.4176831245, blue: 0.4446147978, alpha: 1)
+    static var green =  #colorLiteral(red: 0, green: 0.4277839065, blue: 0.4488680959, alpha: 1)
+    static var grey = #colorLiteral(red: 0.7287964225, green: 0.7573541999, blue: 0.7830216885, alpha: 1)
 }
 
 struct Style {
@@ -32,7 +33,7 @@ struct Style {
     static var selectedCellBackgroundColor = Colors.pink
     static var selectedCellCornerRadius : CGFloat = 18
     
-    static var weekdaysLblColor = Colors.black
+    static var weekdaysLblColor = Colors.grey
     
     static func themeDark(){
         backgroundColor = Colors.darkGray
@@ -43,11 +44,11 @@ struct Style {
     }
     
     static func themeLight(){
-        backgroundColor = Colors.white
+        /*backgroundColor = Colors.white
         monthViewLabelColor = Colors.green
         activeCellLblColor = Colors.green
         activeCellLblColorHighlighted = Colors.white
-        weekdaysLblColor = Colors.black
+        weekdaysLblColor = Colors.grey*/
     }
 }
 
@@ -62,7 +63,7 @@ struct MonthAndDay {
     }
 }
 
-class CalenderView: UIView {
+class CalendarView: UIView {
     
     var numOfDaysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
     var currentMonthIndex: Int = 0
@@ -71,6 +72,8 @@ class CalenderView: UIView {
     var presentYear = 0
     var todaysDate = 0
     var firstWeekDayOfMonth = 0   //(Sunday-Saturday 1-7)
+    
+    var todaysDateCollectionViewIndexPath : IndexPath = IndexPath(item: 0, section: 0)
     
     let selectedDateView: SelectedDateView = {
         let selectedDateView = SelectedDateView()
@@ -190,13 +193,13 @@ class CalenderView: UIView {
 
 }
 
-extension CalenderView : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension CalendarView : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return numOfDaysInMonth[currentMonthIndex-1] + firstWeekDayOfMonth - 1
+        return numOfDaysInMonth[currentMonthIndex - 1] + firstWeekDayOfMonth - 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "daysCollectionViewCell", for: indexPath) as! DateCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daysCollectionViewCell", for: indexPath) as! DateCollectionViewCell
         cell.backgroundColor = UIColor.clear
         if indexPath.item <= firstWeekDayOfMonth - 2 {
             cell.isHidden = true
@@ -207,7 +210,9 @@ extension CalenderView : UICollectionViewDelegate, UICollectionViewDataSource, U
             if calcDate < todaysDate && currentYear == presentYear && currentMonthIndex == presentMonthIndex {
                 cell.isUserInteractionEnabled = false
                 cell.label.textColor = UIColor.lightGray
-            } else {
+            } else if(calcDate == todaysDate && currentYear == presentYear && currentMonthIndex == presentMonthIndex){
+                todaysDateCollectionViewIndexPath = indexPath
+            }else {
                 cell.isUserInteractionEnabled = true
                 cell.label.textColor = Style.activeCellLblColor
             }
@@ -220,6 +225,8 @@ extension CalenderView : UICollectionViewDelegate, UICollectionViewDataSource, U
         cell?.backgroundColor = Style.selectedCellBackgroundColor
         let lbl = cell?.subviews[1] as! UILabel
         lbl.textColor = UIColor.white
+        let dateCollectionViewCell = collectionView.cellForItem(at: indexPath) as! DateCollectionViewCell
+        selectedDateView.selectedDate.text = "\(dateCollectionViewCell.label.text!).\(currentMonthIndex).\(currentYear)"
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -244,7 +251,7 @@ extension CalenderView : UICollectionViewDelegate, UICollectionViewDataSource, U
     }
 }
 
-extension CalenderView: MonthViewDelegate{
+extension CalendarView: MonthViewDelegate{
     func didChangeMonth(monthIndex: Int, year: Int) {
         currentMonthIndex = monthIndex + 1
         currentYear = year
@@ -271,11 +278,11 @@ class DateCollectionViewCell: UICollectionViewCell {
     
     let label: UILabel = {
         let label = UILabel()
-        label.text = "00"
+        label.text = "\(Calendar.current.component(.day, from: Date()))"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = Colors.darkGray
-        label.translatesAutoresizingMaskIntoConstraints=false
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     

@@ -12,7 +12,7 @@ class SelectedDateView: UIView {
     
     let selectedDate: UILabel = {
         let selectedDate = UILabel()
-        selectedDate.text = "Default Month Year text"
+        selectedDate.text = "\(Calendar.current.component(.day, from: Date())).\(Calendar.current.component(.month, from: Date())).\(Calendar.current.component(.year, from: Date()))"
         selectedDate.textColor = Style.selectedDateLabelColor
         selectedDate.textAlignment = .center
         selectedDate.font = UIFont.boldSystemFont(ofSize: 16)
@@ -48,6 +48,6 @@ class SelectedDateView: UIView {
         selectedDate.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         selectedDate.widthAnchor.constraint(equalToConstant: 150).isActive = true
         selectedDate.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
-        selectedDate.text = "6.12.2018"
+        //selectedDate.text = "6.12.2018"
     }
 }
