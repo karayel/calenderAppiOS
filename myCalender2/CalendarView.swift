@@ -135,8 +135,8 @@ class CalendarView: UIView {
         firstWeekDayOfMonth = getFirstWeekDay()
         
         //for leap years, make february month of 29 days
-        if currentMonthIndex == 2 && currentYear % 4 == 0 {
-            numOfDaysInMonth[currentMonthIndex-1] = 29
+        if currentMonthIndex == 2 {
+            numOfDaysInMonth[currentMonthIndex-1] = leapDays(currentYear)
         }
         //end
         
@@ -190,6 +190,13 @@ class CalendarView: UIView {
     func getFirstWeekDay() -> Int {
         return ("\(currentYear)-\(currentMonthIndex)-01".date?.firstDayOfTheMonth.weekday)!
     }
+    
+    func leapDays(_ year: Int) -> Int {
+        if year % 4 == 0 && (year % 100 != 0 || (year % 100 == 0 && year % 400 == 0)) {
+            return 29
+        }
+        return 28
+    }
 
 }
 
@@ -204,7 +211,7 @@ extension CalendarView : UICollectionViewDelegate, UICollectionViewDataSource, U
         if indexPath.item <= firstWeekDayOfMonth - 2 {
             cell.isHidden = true
         } else {
-            let calcDate = indexPath.row-firstWeekDayOfMonth + 2
+            let calcDate = indexPath.row - firstWeekDayOfMonth + 2
             cell.isHidden = false
             cell.label.text = "\(calcDate)"
             if calcDate < todaysDate && currentYear == presentYear && currentMonthIndex == presentMonthIndex {
@@ -258,11 +265,7 @@ extension CalendarView: MonthViewDelegate{
         
         //for leap year, make february month of 29 days
         if monthIndex == 1 {
-            if currentYear % 4 == 0 {
-                numOfDaysInMonth[monthIndex] = 29
-            } else {
-                numOfDaysInMonth[monthIndex] = 28
-            }
+            numOfDaysInMonth[monthIndex] = leapDays(currentYear)
         }
         //end
         
