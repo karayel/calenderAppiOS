@@ -58,7 +58,7 @@ struct MonthAndDay {
     static var monthsArr = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"]
     
     static func englishMonthAndDay(){
-        daysArr = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+        daysArr = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
         monthsArr = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     }
 }
@@ -132,7 +132,7 @@ class CalendarView: UIView {
         currentMonthIndex = Calendar.current.component(.month, from: Date())
         currentYear = Calendar.current.component(.year, from: Date())
         todaysDate = Calendar.current.component(.day, from: Date())
-        firstWeekDayOfMonth = getFirstWeekDay()
+        firstWeekDayOfMonth = getFirstWeekDay() - 1
         
         //for leap years, make february month of 29 days
         if currentMonthIndex == 2 {
