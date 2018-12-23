@@ -13,10 +13,40 @@ protocol MonthViewDelegate: class {
 }
 
 class MonthView: UIView {
-    var monthsArr = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+    var monthsArr = MonthAndDay.monthsArr
     var currentMonthIndex = 0
     var currentYear: Int = 0
     var delegate: MonthViewDelegate?
+    
+    let monthYearLabel: UILabel = {
+        let monthYearLabel = UILabel()
+        monthYearLabel.text = "Default Month Year text"
+        monthYearLabel.textColor = Style.monthViewLblColor
+        monthYearLabel.textAlignment = .center
+        monthYearLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        monthYearLabel.translatesAutoresizingMaskIntoConstraints = false
+        return monthYearLabel
+    }()
+    
+    let nextMonthButton: UIButton = {
+        let nextMonthButton = UIButton()
+        nextMonthButton.setTitle(">", for: .normal)
+        nextMonthButton.setTitleColor(Style.monthViewBtnRightColor, for: .normal)
+        nextMonthButton.translatesAutoresizingMaskIntoConstraints = false
+        nextMonthButton.addTarget(self, action: #selector(btnLeftRightAction(sender:)), for: .touchUpInside)
+        return nextMonthButton
+    }()
+    
+    let previousMonthButton: UIButton = {
+        let previousMonthButton = UIButton()
+        previousMonthButton.setTitle("<", for: .normal)
+        previousMonthButton.setTitleColor(Style.monthViewBtnLeftColor, for: .normal)
+        previousMonthButton.translatesAutoresizingMaskIntoConstraints = false
+        previousMonthButton.addTarget(self, action: #selector(btnLeftRightAction(sender:)), for: .touchUpInside)
+        previousMonthButton.setTitleColor(UIColor.lightGray, for: .disabled)
+        return previousMonthButton
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,11 +57,36 @@ class MonthView: UIView {
         
         setupViews()
         
-        btnLeft.isEnabled=false
+        previousMonthButton.isEnabled = false
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupViews() {
+        self.addSubview(monthYearLabel)
+        monthYearLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        monthYearLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        monthYearLabel.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        monthYearLabel.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        monthYearLabel.text="\(monthsArr[currentMonthIndex]) \(currentYear)"
+        
+        self.addSubview(nextMonthButton)
+        nextMonthButton.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        nextMonthButton.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        nextMonthButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        nextMonthButton.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        
+        self.addSubview(previousMonthButton)
+        previousMonthButton.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        previousMonthButton.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        previousMonthButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        previousMonthButton.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
     }
     
     @objc func btnLeftRightAction(sender: UIButton) {
-        if sender == btnRight {
+        if sender == nextMonthButton {
             currentMonthIndex += 1
             if currentMonthIndex > 11 {
                 currentMonthIndex = 0
@@ -44,62 +99,8 @@ class MonthView: UIView {
                 currentYear -= 1
             }
         }
-        lblName.text="\(monthsArr[currentMonthIndex]) \(currentYear)"
+        monthYearLabel.text="\(monthsArr[currentMonthIndex]) \(currentYear)"
         delegate?.didChangeMonth(monthIndex: currentMonthIndex, year: currentYear)
-    }
-    
-    func setupViews() {
-        self.addSubview(lblName)
-        lblName.topAnchor.constraint(equalTo: topAnchor).isActive=true
-        lblName.centerXAnchor.constraint(equalTo: centerXAnchor).isActive=true
-        lblName.widthAnchor.constraint(equalToConstant: 150).isActive=true
-        lblName.heightAnchor.constraint(equalTo: heightAnchor).isActive=true
-        lblName.text="\(monthsArr[currentMonthIndex]) \(currentYear)"
-        
-        self.addSubview(btnRight)
-        btnRight.topAnchor.constraint(equalTo: topAnchor).isActive=true
-        btnRight.rightAnchor.constraint(equalTo: rightAnchor).isActive=true
-        btnRight.widthAnchor.constraint(equalToConstant: 50).isActive=true
-        btnRight.heightAnchor.constraint(equalTo: heightAnchor).isActive=true
-        
-        self.addSubview(btnLeft)
-        btnLeft.topAnchor.constraint(equalTo: topAnchor).isActive=true
-        btnLeft.leftAnchor.constraint(equalTo: leftAnchor).isActive=true
-        btnLeft.widthAnchor.constraint(equalToConstant: 50).isActive=true
-        btnLeft.heightAnchor.constraint(equalTo: heightAnchor).isActive=true
-    }
-    
-    let lblName: UILabel = {
-        let lbl=UILabel()
-        lbl.text="Default Month Year text"
-        lbl.textColor = Style.monthViewLblColor
-        lbl.textAlignment = .center
-        lbl.font=UIFont.boldSystemFont(ofSize: 16)
-        lbl.translatesAutoresizingMaskIntoConstraints=false
-        return lbl
-    }()
-    
-    let btnRight: UIButton = {
-        let btn=UIButton()
-        btn.setTitle(">", for: .normal)
-        btn.setTitleColor(Style.monthViewBtnRightColor, for: .normal)
-        btn.translatesAutoresizingMaskIntoConstraints=false
-        btn.addTarget(self, action: #selector(btnLeftRightAction(sender:)), for: .touchUpInside)
-        return btn
-    }()
-    
-    let btnLeft: UIButton = {
-        let btn=UIButton()
-        btn.setTitle("<", for: .normal)
-        btn.setTitleColor(Style.monthViewBtnLeftColor, for: .normal)
-        btn.translatesAutoresizingMaskIntoConstraints=false
-        btn.addTarget(self, action: #selector(btnLeftRightAction(sender:)), for: .touchUpInside)
-        btn.setTitleColor(UIColor.lightGray, for: .disabled)
-        return btn
-    }()
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

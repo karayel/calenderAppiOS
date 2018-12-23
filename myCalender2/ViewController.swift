@@ -15,13 +15,19 @@ enum MyTheme {
 
 class ViewController: UIViewController {
     
-    var theme = MyTheme.dark
+    var theme = MyTheme.light
+    
+    let calenderView: CalenderView = {
+        let v = CalenderView(theme: MyTheme.light)
+        v.translatesAutoresizingMaskIntoConstraints=false
+        return v
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "My Calender"
         self.navigationController?.navigationBar.isTranslucent=false
-        self.view.backgroundColor=Style.bgColor
+        self.view.backgroundColor = Style.bgColor
         
         view.addSubview(calenderView)
         calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10).isActive=true
@@ -29,7 +35,7 @@ class ViewController: UIViewController {
         calenderView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive=true
         calenderView.heightAnchor.constraint(equalToConstant: 365).isActive=true
         
-        let rightBarBtn = UIBarButtonItem(title: "Light", style: .plain, target: self, action: #selector(rightBarBtnAction))
+        let rightBarBtn = UIBarButtonItem(title: "Dark", style: .plain, target: self, action: #selector(rightBarBtnAction))
         self.navigationItem.rightBarButtonItem = rightBarBtn
     }
     
@@ -51,12 +57,5 @@ class ViewController: UIViewController {
         self.view.backgroundColor=Style.bgColor
         calenderView.changeTheme()
     }
-    
-    let calenderView: CalenderView = {
-        let v=CalenderView(theme: MyTheme.dark)
-        v.translatesAutoresizingMaskIntoConstraints=false
-        return v
-    }()
-    
 }
 

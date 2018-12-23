@@ -11,36 +11,51 @@ import UIKit
 struct Colors {
     static var darkGray = #colorLiteral(red: 0.3764705882, green: 0.3647058824, blue: 0.3647058824, alpha: 1)
     static var darkRed = #colorLiteral(red: 0.5019607843, green: 0.1529411765, blue: 0.1764705882, alpha: 1)
+    static var white = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+    static var black = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 }
 
 struct Style {
-    static var bgColor = UIColor.white
-    static var monthViewLblColor = UIColor.white
-    static var monthViewBtnRightColor = UIColor.white
-    static var monthViewBtnLeftColor = UIColor.white
-    static var activeCellLblColor = UIColor.white
-    static var activeCellLblColorHighlighted = UIColor.black
-    static var weekdaysLblColor = UIColor.white
+    // DEFAULT STYLE LIGHT
+    static var bgColor = Colors.white
+    static var monthViewLblColor = Colors.black
+    static var monthViewBtnRightColor = Colors.black
+    static var monthViewBtnLeftColor = Colors.black
+    static var activeCellLblColor = Colors.black
+    static var activeCellLblColorHighlighted = Colors.white
+    static var weekdaysLblColor = Colors.black
     
     static func themeDark(){
         bgColor = Colors.darkGray
-        monthViewLblColor = UIColor.white
-        monthViewBtnRightColor = UIColor.white
-        monthViewBtnLeftColor = UIColor.white
-        activeCellLblColor = UIColor.white
-        activeCellLblColorHighlighted = UIColor.black
-        weekdaysLblColor = UIColor.white
+        monthViewLblColor = Colors.white
+        monthViewBtnRightColor = Colors.white
+        monthViewBtnLeftColor = Colors.white
+        activeCellLblColor = Colors.white
+        activeCellLblColorHighlighted = Colors.black
+        weekdaysLblColor = Colors.white
     }
     
     static func themeLight(){
-        bgColor = UIColor.white
-        monthViewLblColor = UIColor.black
-        monthViewBtnRightColor = UIColor.black
-        monthViewBtnLeftColor = UIColor.black
-        activeCellLblColor = UIColor.black
-        activeCellLblColorHighlighted = UIColor.white
-        weekdaysLblColor = UIColor.black
+        bgColor = Colors.white
+        monthViewLblColor = Colors.black
+        monthViewBtnRightColor = Colors.black
+        monthViewBtnLeftColor = Colors.black
+        activeCellLblColor = Colors.black
+        activeCellLblColorHighlighted = Colors.white
+        weekdaysLblColor = Colors.black
     }
+}
+
+struct MonthAndDay {
+    // DEFAULT TURKISH
+    static var daysArr = ["P", "S", "Ç", "P", "C", "C", "P"]
+    static var monthsArr = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"]
+    
+    static func englishMonthAndDay(){
+        daysArr = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+        monthsArr = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    }
+
 }
 
 class CalenderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, MonthViewDelegate {
@@ -74,9 +89,9 @@ class CalenderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource
     func changeTheme() {
         myCollectionView.reloadData()
         
-        monthView.lblName.textColor = Style.monthViewLblColor
-        monthView.btnRight.setTitleColor(Style.monthViewBtnRightColor, for: .normal)
-        monthView.btnLeft.setTitleColor(Style.monthViewBtnLeftColor, for: .normal)
+        monthView.monthYearLabel.textColor = Style.monthViewLblColor
+        monthView.nextMonthButton.setTitleColor(Style.monthViewBtnRightColor, for: .normal)
+        monthView.previousMonthButton.setTitleColor(Style.monthViewBtnLeftColor, for: .normal)
         
         for i in 0..<7 {
             (weekdaysView.myStackView.subviews[i] as! UILabel).textColor = Style.weekdaysLblColor
@@ -87,7 +102,7 @@ class CalenderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource
         currentMonthIndex = Calendar.current.component(.month, from: Date())
         currentYear = Calendar.current.component(.year, from: Date())
         todaysDate = Calendar.current.component(.day, from: Date())
-        firstWeekDayOfMonth=getFirstWeekDay()
+        firstWeekDayOfMonth = getFirstWeekDay()
         
         //for leap years, make february month of 29 days
         if currentMonthIndex == 2 && currentYear % 4 == 0 {
@@ -95,8 +110,8 @@ class CalenderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource
         }
         //end
         
-        presentMonthIndex=currentMonthIndex
-        presentYear=currentYear
+        presentMonthIndex = currentMonthIndex
+        presentYear = currentYear
         
         setupViews()
         
@@ -181,7 +196,7 @@ class CalenderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource
         
         myCollectionView.reloadData()
         
-        monthView.btnLeft.isEnabled = !(currentMonthIndex == presentMonthIndex && currentYear == presentYear)
+        monthView.previousMonthButton.isEnabled = !(currentMonthIndex == presentMonthIndex && currentYear == presentYear)
     }
     
     func setupViews() {
@@ -206,13 +221,13 @@ class CalenderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource
     }
     
     let monthView: MonthView = {
-        let v=MonthView()
+        let v = MonthView()
         v.translatesAutoresizingMaskIntoConstraints=false
         return v
     }()
     
     let weekdaysView: WeekdaysView = {
-        let v=WeekdaysView()
+        let v = WeekdaysView()
         v.translatesAutoresizingMaskIntoConstraints=false
         return v
     }()
@@ -235,6 +250,17 @@ class CalenderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource
 }
 
 class dateCVCell: UICollectionViewCell {
+    
+    let lbl: UILabel = {
+        let label = UILabel()
+        label.text = "00"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = Colors.darkGray
+        label.translatesAutoresizingMaskIntoConstraints=false
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor=UIColor.clear
@@ -244,6 +270,10 @@ class dateCVCell: UICollectionViewCell {
         setupViews()
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func setupViews() {
         addSubview(lbl)
         lbl.topAnchor.constraint(equalTo: topAnchor).isActive=true
@@ -251,20 +281,7 @@ class dateCVCell: UICollectionViewCell {
         lbl.rightAnchor.constraint(equalTo: rightAnchor).isActive=true
         lbl.bottomAnchor.constraint(equalTo: bottomAnchor).isActive=true
     }
-    
-    let lbl: UILabel = {
-        let label = UILabel()
-        label.text = "00"
-        label.textAlignment = .center
-        label.font=UIFont.systemFont(ofSize: 16)
-        label.textColor=Colors.darkGray
-        label.translatesAutoresizingMaskIntoConstraints=false
-        return label
-    }()
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+ 
 }
 
 //get first day of the month
