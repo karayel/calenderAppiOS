@@ -10,11 +10,11 @@ import UIKit
 
 class WeekdaysView: UIView {
     
-    let myStackView: UIStackView = {
-        let stackView=UIStackView()
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints=false
-        return stackView
+    let weekDayStackView: UIStackView = {
+        let weekDayStackView = UIStackView()
+        weekDayStackView.distribution = .fillEqually
+        weekDayStackView.translatesAutoresizingMaskIntoConstraints = false
+        return weekDayStackView
     }()
     
     override init(frame: CGRect) {
@@ -29,19 +29,19 @@ class WeekdaysView: UIView {
     }
     
     func setupViews() {
-        addSubview(myStackView)
-        myStackView.topAnchor.constraint(equalTo: topAnchor).isActive=true
-        myStackView.leftAnchor.constraint(equalTo: leftAnchor).isActive=true
-        myStackView.rightAnchor.constraint(equalTo: rightAnchor).isActive=true
-        myStackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive=true
+        addSubview(weekDayStackView)
+        weekDayStackView.topAnchor.constraint(equalTo: topAnchor).isActive=true
+        weekDayStackView.leftAnchor.constraint(equalTo: leftAnchor).isActive=true
+        weekDayStackView.rightAnchor.constraint(equalTo: rightAnchor).isActive=true
+        weekDayStackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive=true
         
         var daysArr = MonthAndDay.daysArr
         for i in 0..<7 {
-            let lbl=UILabel()
-            lbl.text=daysArr[i]
+            let lbl = UILabel()
+            lbl.text = daysArr[i]
             lbl.textAlignment = .center
             lbl.textColor = Style.weekdaysLblColor
-            myStackView.addArrangedSubview(lbl)
+            weekDayStackView.addArrangedSubview(lbl)
         }
     } 
 }

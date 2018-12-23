@@ -22,7 +22,7 @@ class MonthView: UIView {
     let monthYearLabel: UILabel = {
         let monthYearLabel = UILabel()
         monthYearLabel.text = "Default Month Year text"
-        monthYearLabel.textColor = Style.monthViewLblColor
+        monthYearLabel.textColor = Style.monthViewLabelColor
         monthYearLabel.textAlignment = .center
         monthYearLabel.font = UIFont.boldSystemFont(ofSize: 16)
         monthYearLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -32,18 +32,18 @@ class MonthView: UIView {
     let nextMonthButton: UIButton = {
         let nextMonthButton = UIButton()
         nextMonthButton.setTitle(">", for: .normal)
-        nextMonthButton.setTitleColor(Style.monthViewBtnRightColor, for: .normal)
+        nextMonthButton.setTitleColor(Style.nextMonthButtonColor, for: .normal)
         nextMonthButton.translatesAutoresizingMaskIntoConstraints = false
-        nextMonthButton.addTarget(self, action: #selector(btnLeftRightAction(sender:)), for: .touchUpInside)
+        nextMonthButton.addTarget(self, action: #selector(nextAndPreviousMonthAction(sender:)), for: .touchUpInside)
         return nextMonthButton
     }()
     
     let previousMonthButton: UIButton = {
         let previousMonthButton = UIButton()
         previousMonthButton.setTitle("<", for: .normal)
-        previousMonthButton.setTitleColor(Style.monthViewBtnLeftColor, for: .normal)
+        previousMonthButton.setTitleColor(Style.previousMonthButtonColor, for: .normal)
         previousMonthButton.translatesAutoresizingMaskIntoConstraints = false
-        previousMonthButton.addTarget(self, action: #selector(btnLeftRightAction(sender:)), for: .touchUpInside)
+        previousMonthButton.addTarget(self, action: #selector(nextAndPreviousMonthAction(sender:)), for: .touchUpInside)
         previousMonthButton.setTitleColor(UIColor.lightGray, for: .disabled)
         return previousMonthButton
     }()
@@ -85,7 +85,7 @@ class MonthView: UIView {
         previousMonthButton.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
     }
     
-    @objc func btnLeftRightAction(sender: UIButton) {
+    @objc func nextAndPreviousMonthAction(sender: UIButton) {
         if sender == nextMonthButton {
             currentMonthIndex += 1
             if currentMonthIndex > 11 {
