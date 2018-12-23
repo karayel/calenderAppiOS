@@ -31,8 +31,7 @@ class MonthView: UIView {
     
     let nextMonthButton: UIButton = {
         let nextMonthButton = UIButton()
-        nextMonthButton.setTitle(">", for: .normal)
-        nextMonthButton.setTitleColor(Style.nextMonthButtonColor, for: .normal)
+        nextMonthButton.setImage(UIImage(named: "right"), for: .normal)
         nextMonthButton.translatesAutoresizingMaskIntoConstraints = false
         nextMonthButton.addTarget(self, action: #selector(nextAndPreviousMonthAction(sender:)), for: .touchUpInside)
         return nextMonthButton
@@ -40,11 +39,9 @@ class MonthView: UIView {
     
     let previousMonthButton: UIButton = {
         let previousMonthButton = UIButton()
-        previousMonthButton.setTitle("<", for: .normal)
-        previousMonthButton.setTitleColor(Style.previousMonthButtonColor, for: .normal)
+        previousMonthButton.setImage(UIImage(named: "left"), for: .normal)
         previousMonthButton.translatesAutoresizingMaskIntoConstraints = false
         previousMonthButton.addTarget(self, action: #selector(nextAndPreviousMonthAction(sender:)), for: .touchUpInside)
-        previousMonthButton.setTitleColor(UIColor.lightGray, for: .disabled)
         return previousMonthButton
     }()
     

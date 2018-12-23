@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05AF095E21CFEBDE00F5C244 /* SelectedDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AF095D21CFEBDE00F5C244 /* SelectedDateView.swift */; };
 		D92381B61F9C5CDE002FF5E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92381B51F9C5CDE002FF5E0 /* AppDelegate.swift */; };
 		D92381B81F9C5CDE002FF5E0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92381B71F9C5CDE002FF5E0 /* ViewController.swift */; };
 		D92381BD1F9C5CDE002FF5E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D92381BC1F9C5CDE002FF5E0 /* Assets.xcassets */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		05AF095D21CFEBDE00F5C244 /* SelectedDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedDateView.swift; sourceTree = "<group>"; };
 		D92381B21F9C5CDE002FF5E0 /* myCalender2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myCalender2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D92381B51F9C5CDE002FF5E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D92381B71F9C5CDE002FF5E0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,9 +62,10 @@
 			children = (
 				D92381B51F9C5CDE002FF5E0 /* AppDelegate.swift */,
 				D92381B71F9C5CDE002FF5E0 /* ViewController.swift */,
+				D92381CB1F9C5F68002FF5E0 /* CalenderView.swift */,
 				D92381C71F9C5D61002FF5E0 /* MonthView.swift */,
 				D92381C91F9C5EC3002FF5E0 /* WeekdaysView.swift */,
-				D92381CB1F9C5F68002FF5E0 /* CalenderView.swift */,
+				05AF095D21CFEBDE00F5C244 /* SelectedDateView.swift */,
 				D92381BC1F9C5CDE002FF5E0 /* Assets.xcassets */,
 				D92381BE1F9C5CDE002FF5E0 /* LaunchScreen.storyboard */,
 				D92381C11F9C5CDE002FF5E0 /* Info.plist */,
@@ -142,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D92381B81F9C5CDE002FF5E0 /* ViewController.swift in Sources */,
+				05AF095E21CFEBDE00F5C244 /* SelectedDateView.swift in Sources */,
 				D92381CA1F9C5EC3002FF5E0 /* WeekdaysView.swift in Sources */,
 				D92381C81F9C5D61002FF5E0 /* MonthView.swift in Sources */,
 				D92381CC1F9C5F68002FF5E0 /* CalenderView.swift in Sources */,

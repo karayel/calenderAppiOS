@@ -18,9 +18,9 @@ class ViewController: UIViewController {
     var theme = MyTheme.light
     
     let calenderView: CalenderView = {
-        let v = CalenderView(theme: MyTheme.light)
-        v.translatesAutoresizingMaskIntoConstraints=false
-        return v
+        let calenderView = CalenderView(theme: MyTheme.light)
+        calenderView.translatesAutoresizingMaskIntoConstraints=false
+        return calenderView
     }()
     
     override func viewDidLoad() {
@@ -31,13 +31,15 @@ class ViewController: UIViewController {
         
         view.addSubview(calenderView)
         calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10).isActive=true
-        calenderView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive=true
-        calenderView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive=true
-        calenderView.heightAnchor.constraint(equalToConstant: 365).isActive=true
+        calenderView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30).isActive=true
+        calenderView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive=true
+        calenderView.heightAnchor.constraint(equalToConstant: 375).isActive=true
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         calenderView.daysCollectionView.collectionViewLayout.invalidateLayout()
     }
+
 }
+

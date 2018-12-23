@@ -13,26 +13,30 @@ struct Colors {
     static var darkRed = #colorLiteral(red: 0.5019607843, green: 0.1529411765, blue: 0.1764705882, alpha: 1)
     static var white = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     static var black = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    static var pink = #colorLiteral(red: 0.9666872621, green: 0.3734043837, blue: 0.3709292412, alpha: 1)
+    static var green =  #colorLiteral(red: 0.01955322362, green: 0.4176831245, blue: 0.4446147978, alpha: 1)
 }
 
 struct Style {
     // DEFAULT STYLE LIGHT
     static var backgroundColor = Colors.white
     
-    static var monthViewLabelColor = Colors.black
+    static var selectedDateViewBackgroundColor = Colors.pink
+    static var selectedDateLabelColor = Colors.white
     
-    static var nextMonthButtonColor = Colors.black
-    static var previousMonthButtonColor = Colors.black
+    static var monthViewLabelColor = Colors.green
     
-    static var activeCellLblColor = Colors.black
+    static var activeCellLblColor = Colors.green
     static var activeCellLblColorHighlighted = Colors.white
+    
+    static var selectedCellBackgroundColor = Colors.pink
+    static var selectedCellCornerRadius : CGFloat = 18
+    
     static var weekdaysLblColor = Colors.black
     
     static func themeDark(){
         backgroundColor = Colors.darkGray
         monthViewLabelColor = Colors.white
-        nextMonthButtonColor = Colors.white
-        previousMonthButtonColor = Colors.white
         activeCellLblColor = Colors.white
         activeCellLblColorHighlighted = Colors.black
         weekdaysLblColor = Colors.white
@@ -40,10 +44,8 @@ struct Style {
     
     static func themeLight(){
         backgroundColor = Colors.white
-        monthViewLabelColor = Colors.black
-        nextMonthButtonColor = Colors.black
-        previousMonthButtonColor = Colors.black
-        activeCellLblColor = Colors.black
+        monthViewLabelColor = Colors.green
+        activeCellLblColor = Colors.green
         activeCellLblColorHighlighted = Colors.white
         weekdaysLblColor = Colors.black
     }
@@ -70,6 +72,12 @@ class CalenderView: UIView {
     var todaysDate = 0
     var firstWeekDayOfMonth = 0   //(Sunday-Saturday 1-7)
     
+    let selectedDateView: SelectedDateView = {
+        let selectedDateView = SelectedDateView()
+        selectedDateView.translatesAutoresizingMaskIntoConstraints=false
+        return selectedDateView
+    }()
+    
     let monthView: MonthView = {
         let monthView = MonthView()
         monthView.translatesAutoresizingMaskIntoConstraints=false
@@ -91,6 +99,7 @@ class CalenderView: UIView {
         daysCollectionView.translatesAutoresizingMaskIntoConstraints = false
         daysCollectionView.backgroundColor = UIColor.clear
         daysCollectionView.allowsMultipleSelection = false
+        daysCollectionView.isScrollEnabled = false;
         return daysCollectionView
     }()
     
@@ -139,8 +148,14 @@ class CalenderView: UIView {
     }
     
     func setupViews() {
+        addSubview(selectedDateView)
+        selectedDateView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        selectedDateView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        selectedDateView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        selectedDateView.heightAnchor.constraint(equalToConstant: 55).isActive = true
+        
         addSubview(monthView)
-        monthView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        monthView.topAnchor.constraint(equalTo: selectedDateView.bottomAnchor).isActive = true
         monthView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         monthView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         monthView.heightAnchor.constraint(equalToConstant: 35).isActive = true
@@ -163,8 +178,6 @@ class CalenderView: UIView {
         daysCollectionView.reloadData()
         
         monthView.monthYearLabel.textColor = Style.monthViewLabelColor
-        monthView.nextMonthButton.setTitleColor(Style.nextMonthButtonColor, for: .normal)
-        monthView.previousMonthButton.setTitleColor(Style.previousMonthButtonColor, for: .normal)
         
         for i in 0..<7 {
             (weekdaysView.weekDayStackView.subviews[i] as! UILabel).textColor = Style.weekdaysLblColor
@@ -190,13 +203,13 @@ extension CalenderView : UICollectionViewDelegate, UICollectionViewDataSource, U
         } else {
             let calcDate = indexPath.row-firstWeekDayOfMonth + 2
             cell.isHidden = false
-            cell.lbl.text = "\(calcDate)"
+            cell.label.text = "\(calcDate)"
             if calcDate < todaysDate && currentYear == presentYear && currentMonthIndex == presentMonthIndex {
                 cell.isUserInteractionEnabled = false
-                cell.lbl.textColor = UIColor.lightGray
+                cell.label.textColor = UIColor.lightGray
             } else {
                 cell.isUserInteractionEnabled = true
-                cell.lbl.textColor = Style.activeCellLblColor
+                cell.label.textColor = Style.activeCellLblColor
             }
         }
         return cell
@@ -204,7 +217,7 @@ extension CalenderView : UICollectionViewDelegate, UICollectionViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
-        cell?.backgroundColor = Colors.darkRed
+        cell?.backgroundColor = Style.selectedCellBackgroundColor
         let lbl = cell?.subviews[1] as! UILabel
         lbl.textColor = UIColor.white
     }
@@ -218,7 +231,7 @@ extension CalenderView : UICollectionViewDelegate, UICollectionViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.frame.width/7 - 8
-        let height: CGFloat = 40
+        let height: CGFloat = width
         return CGSize(width: width, height: height)
     }
     
@@ -256,7 +269,7 @@ extension CalenderView: MonthViewDelegate{
 
 class DateCollectionViewCell: UICollectionViewCell {
     
-    let lbl: UILabel = {
+    let label: UILabel = {
         let label = UILabel()
         label.text = "00"
         label.textAlignment = .center
@@ -268,9 +281,9 @@ class DateCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor=UIColor.clear
-        layer.cornerRadius=5
-        layer.masksToBounds=true
+        backgroundColor = UIColor.clear
+        layer.cornerRadius = Style.selectedCellCornerRadius
+        layer.masksToBounds = true
         
         setupViews()
     }
@@ -280,11 +293,11 @@ class DateCollectionViewCell: UICollectionViewCell {
     }
     
     func setupViews() {
-        addSubview(lbl)
-        lbl.topAnchor.constraint(equalTo: topAnchor).isActive=true
-        lbl.leftAnchor.constraint(equalTo: leftAnchor).isActive=true
-        lbl.rightAnchor.constraint(equalTo: rightAnchor).isActive=true
-        lbl.bottomAnchor.constraint(equalTo: bottomAnchor).isActive=true
+        addSubview(label)
+        label.topAnchor.constraint(equalTo: topAnchor).isActive=true
+        label.leftAnchor.constraint(equalTo: leftAnchor).isActive=true
+        label.rightAnchor.constraint(equalTo: rightAnchor).isActive=true
+        label.bottomAnchor.constraint(equalTo: bottomAnchor).isActive=true
     }
  
 }
